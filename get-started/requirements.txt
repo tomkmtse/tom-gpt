@@ -3,5 +3,7 @@ langchain
 langchain-core
 langchain-community
 langchain-cohere
+langchain-pinecone
 duckduckgo_search
 numexpr
+pinecone

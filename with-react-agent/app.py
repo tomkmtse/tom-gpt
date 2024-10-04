@@ -1,17 +1,14 @@
 import streamlit as st
 
-from pinecone import Pinecone
-
 from langchain_core.prompts import PromptTemplate
 from langchain.agents import AgentExecutor, Tool, create_react_agent
-from langchain.chains import LLMMathChain, RetrievalQA
+from langchain.chains import LLMMathChain
 from langchain_community.callbacks import StreamlitCallbackHandler
 from langchain_community.utilities import DuckDuckGoSearchAPIWrapper
 from langchain_core.runnables import RunnableConfig
-from langchain_cohere import ChatCohere, CohereEmbeddings
-from langchain_pinecone import PineconeVectorStore
+from langchain_cohere import ChatCohere
 
-SYSTEM_MSG = "In this version, if you ask me questions about Kyudo, I would check the Kyudo Manual Volume 1 in Japanese before answering. Otherwise I would think, act (search or calculate) and observe step by step until coming up with a final answer. Anything I can help?"
+SYSTEM_MSG = "In this version, I would think, act (search or calculate) and observe step by step until coming up with a final answer. Anything I can help?"
 TEMPLATE = '''
 Answer the following questions as best you can. You have access to the following tools:
 {tools}
@@ -33,21 +30,10 @@ avatar = lambda role: "🤳" if role == 'user' else "🤖"
 
 # LLM
 llm = ChatCohere(cohere_api_key=st.secrets["cohere_api_key"], streaming=True)
-embd = CohereEmbeddings(cohere_api_key=st.secrets["cohere_api_key"], model="embed-multilingual-v3.0")
-
-# Vector Store
-pc = Pinecone(api_key=st.secrets["pinecone_api_key"])
-index = pc.Index("tom-gpt-doc")
-vector_store = PineconeVectorStore(index=index, embedding=embd)
 
 # Tools
 search = DuckDuckGoSearchAPIWrapper()
 llm_math_chain = LLMMathChain.from_llm(llm=llm)
-retrieval_chain = RetrievalQA.from_chain_type(
-    llm=llm,
-    chain_type="stuff",
-    retriever=vector_store.as_retriever()
-)
 
 tools = [
     Tool(
@@ -59,11 +45,6 @@ tools = [
         name="Calculator",
         func=llm_math_chain.run,
         description="useful for when you need to answer questions about math",
-    ),
-    Tool(
-        name="Document",
-        func=retrieval_chain.run,
-        description="useful for when you need to answer questions about 弓道, きゅうどう or Kyudo",
     )
 ]
 

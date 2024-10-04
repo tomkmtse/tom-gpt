@@ -13,11 +13,17 @@ This repository is for learning generative AI.
 tom-gpt/  
 ├── get-started/  
 │   └── app.py  
-│   └── requirements.txt  
+│   └── requirements.txt
+├── with-rag/  
+│   └── app.py  
+│   └── requirements.txt
+├── with-react-agent/  
+│   └── app.py  
+│   └── requirements.txt
 ├── .gitignore  
 └── README.md  
 
-## get-started
+## with-react-agent
 
 This single page app is for demostrating the following tech stack or ideas.
 
@@ -29,6 +35,17 @@ This single page app is for demostrating the following tech stack or ideas.
 - Framework LangChain
   - LangChain Agent, such as AgentExecutor, Tool, create_react_agent
   - LangChain Chain, such as LLMMathChain
+  
+## with-rag or get-started
+
+This single page app is for demostrating how to use RAG, on top of with react-agent.
+
+- RAG
+  - Embeddings CohereEmbeddings
+  - Vector Store PineconeVectorStore
+  - LangChain Chain RetrievalQA
+  
+Before that, related documents for RAG is required to store in object store (e.g. AWS S3) and embedd in vector store (e.g. Pinecone)
 
 ## Installation
 
